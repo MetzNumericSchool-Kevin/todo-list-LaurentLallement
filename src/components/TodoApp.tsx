@@ -1,43 +1,59 @@
 import { SearchBar } from "./SearchBar";
 import TodoItem from "./TodoItem.tsx";
+import { useState } from "react";
+
+// Définition du type pour une tâche individuelle
+interface Task {
+    id: number;
+    text: string;
+    isCompleted: boolean;
+}
 
 export function TodoApp() {
-    const handleAddItem = (value: string) => {
-        console.log("Nouvelle tâche ajoutée :", value);
-    };
+    // Le corps du composant doit être entouré par des accolades
+    const [taskList, setTaskList] = useState<Task[]>([
+        { id: 1, text: "Acheter des oranges", isCompleted: false },
+        { id: 2, text: "Courir avec le fraté", isCompleted: true },
+        { id: 3, text: "Me faire défoncer à LoL", isCompleted: true },
+    ]);
+    const [currentId, setCurrentId] = useState(3);
+
+    const handleAddItem = (value : string) => {
+        if (value) {
+                setTaskList(taskList => [
+                    ...taskList,
+                    { id: currentId + 1, text: value, isCompleted: false }
+                ]);
+                setCurrentId(id => id + 1);
+            }
+        };
 
     // Gestion de cocher/décocher
     const handleToggle = (id: number): void => {
-        console.log("Tâche cochée/décochée avec l'ID :", id);
+        setTaskList((taskList) =>
+            taskList.map((task) =>
+                task.id === id ? { ...task, isCompleted: !task.isCompleted } : task // terriblement efficace mais ça pique un peu les yeux à un vieux développeur
+            )
+        );
     };
 
     // Gestion de la suppression
     const handleDelete = (id: number): void => {
-        console.log("Tâche supprimée avec l'ID :", id);
+        setTaskList(taskList => taskList.filter(task => task.id !== id)); // filter vraiment cool !
     };
 
     return (
         <>
             <SearchBar placeholder="Ajouter une tâche" onAddItem={handleAddItem} />
             <div className="my-5 flex-column gap-5 w-full text-left">
-                <TodoItem
-                    key={1}
-                    task={{id:1, text:"Acheter des oranges", isCompleted:false}}
-                    onToggle={() => handleToggle(1)}
-                    onDelete={() => handleDelete(1)}                />
-                <TodoItem
-                    key={2}
-                    task={{id:2, text:"Courir avec le fraté", isCompleted:true}}
-
-                    onToggle={() => handleToggle(2)}
-                    onDelete={() => handleDelete(2)}                />
-
-                <TodoItem
-                    key={3}
-                    task={{id:3, text:"Me faire défoncer à LoL", isCompleted:true}}
-
-                    onToggle={() => handleToggle(3)}
-                    onDelete={() => handleDelete(3)}                />
+                {taskList.map((task) => (
+                    <TodoItem
+                        key={task.id}
+                        task={task}
+                        onToggle={() => handleToggle(task.id)}
+                        onDelete={() => handleDelete(task.id)}
+                    />
+                ))}
             </div>
         </>
     );
