@@ -25,8 +25,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Ajouter une
         }
     };
 
-
-
     return (
         <div className="flex">
             <label className="input input-bordered flex items-center gap-2">

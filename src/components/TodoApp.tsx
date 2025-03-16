@@ -46,7 +46,13 @@ export function TodoApp() {
         <>
             <SearchBar placeholder="Ajouter une tâche" onAddItem={handleAddItem} />
             <div className="my-5 flex-column gap-5 w-full text-left">
-                {taskList.map((task) => (
+                {taskList.sort((a, b) => {
+                    if (a.isCompleted == b.isCompleted) {
+                        return 0; // Si les deux tâches ont le même état, leur ordre reste inchangé
+                    }
+                    return a.isCompleted ? 1 : -1; // Les tâches non cochées (false) doivent apparaître avant les cochées (true)
+                })
+                    .map((task) => (
                     <TodoItem
                         key={task.id}
                         task={task}
