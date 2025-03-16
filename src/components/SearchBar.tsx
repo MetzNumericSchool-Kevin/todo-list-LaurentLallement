@@ -13,6 +13,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Ajouter une
         setInputValue(e.target.value);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") handleButtonClick();
+    };
+
     // Fonction appelée lors du clic sur le bouton
     const handleButtonClick = () => {
         if (onAddItem && inputValue.trim()) {
@@ -20,6 +24,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Ajouter une
             setInputValue(""); // Réinitialise l'input après l'ajout
         }
     };
+
+
 
     return (
         <div className="flex">
@@ -30,6 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Ajouter une
                     placeholder={placeholder}
                     value={inputValue}
                     onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
                 />
             </label>
 
