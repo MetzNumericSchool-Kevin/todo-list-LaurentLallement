@@ -1,6 +1,6 @@
 import { SearchBar } from "./SearchBar";
 import TodoItem from "./TodoItem.tsx";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 // Définition du type pour une tâche individuelle
 interface Task {
@@ -11,20 +11,21 @@ interface Task {
 
 export function TodoApp() {
     // Le corps du composant doit être entouré par des accolades
-    const [taskList, setTaskList] = useState<Task[]>([
-        { id: 1, text: "Acheter des oranges", isCompleted: false },
-        { id: 2, text: "Courir avec le fraté", isCompleted: true },
-        { id: 3, text: "Me faire défoncer à LoL", isCompleted: true },
-    ]);
-    const [currentId, setCurrentId] = useState(3);
+    const [taskList, setTaskList] = useState<Task[]>(() => {
+       const saveData = localStorage.getItem("taskList");
+       return saveData ? JSON.parse(saveData) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem("taskList", JSON.stringify(taskList));
+    }, [taskList]);
 
     const handleAddItem = (value : string) => {
         if (value) {
                 setTaskList(taskList => [
                     ...taskList,
-                    { id: currentId + 1, text: value, isCompleted: false }
+                    { id: taskList.length + 1, text: value, isCompleted: false }
                 ]);
-                setCurrentId(id => id + 1);
             }
         };
 
