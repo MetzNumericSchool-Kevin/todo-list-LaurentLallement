@@ -19,8 +19,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Ajouter une
 
     // Fonction appelée lors du clic sur le bouton
     const handleButtonClick = () => {
-        if (onAddItem && inputValue.trim()) {
-            onAddItem(inputValue); // Appelle la fonction passée en props avec la valeur saisie
+        const trimText = inputValue.trim();
+        if (onAddItem && trimText) {
+            onAddItem(trimText); // Appelle la fonction passée en props avec la valeur saisie
             setInputValue(""); // Réinitialise l'input après l'ajout
         }
     };
